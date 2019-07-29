@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHOlder> {
@@ -50,10 +51,22 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHOlder> 
     public int getItemCount() {
         return tweets.size();
     }
+//clean the recylcerview
+    public void clear(){
+        tweets.clear();
+        notifyDataSetChanged();
+    }
+//add all element in the list
+    public void addTweet(List<Tweet> tweetList){
+      //  tweets=new ArrayList<>();
+        tweets.addAll(tweetList);
+        notifyDataSetChanged();
+    }
+
     //Define the viewholder
     public class ViewHOlder extends RecyclerView.ViewHolder{
         public ImageView imgProfile;
-        public TextView TVScreenName,TVbody;
+        public TextView TVScreenName,TVbody,tv_time;
 
 
         public ViewHOlder(@NonNull View itemView) {
@@ -61,6 +74,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHOlder> 
             imgProfile=itemView.findViewById(R.id.img_profil);
             TVScreenName=itemView.findViewById(R.id.tv_name);
             TVbody=itemView.findViewById(R.id.tv_tweet);
+            tv_time=itemView.findViewById(R.id.tv_time);
         }
     }
 }

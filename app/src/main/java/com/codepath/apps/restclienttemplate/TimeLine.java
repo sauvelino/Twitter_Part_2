@@ -3,6 +3,7 @@ package com.codepath.apps.restclienttemplate;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -29,12 +30,13 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
-public class MainActivity extends AppCompatActivity
+public class TimeLine extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    private  RestClient client;
+    private TwitterClient client;
     private RecyclerView recyclerView;
     private  TweetAdapter tweetAdapter;
     private List<Tweet> tweets;
+    private SwipeRefreshLayout swipeRefreshLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +62,22 @@ public class MainActivity extends AppCompatActivity
 
 
         //for the client request
-        client= RestApplication.getRestClient(this);
+        client= TwitterApplication.getRestClient(this);
+
+        //swipe
+        swipeRefreshLayout=findViewById(R.id.swipecontainer);
+        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                PopulateHomeTimeLIne();
+                Log.d("TwitterClient","Refresh");
+            }
+        });
 
         //create method for populate
         PopulateHomeTimeLIne();
@@ -81,6 +98,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 Log.d("TwitterClient",response.toString());
+                List<Tweet> tweettoadd=new ArrayList<>();
                 for(int i=0; i<response.length();i++){
                     try {
                         //convert each jsonobject into tweet object
@@ -88,14 +106,20 @@ public class MainActivity extends AppCompatActivity
 
                         Tweet tweet= Tweet.fromJson(jsonObject);
                         //add the tweet into our data source
-                        tweets.add(tweet);
+                        tweettoadd.add(tweet);
 
                         //notify datachange
-                        tweetAdapter.notifyItemInserted(tweets.size()-1);
+                      //  tweetAdapter.notifyItemInserted(tweets.size()-1);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
+                //clear the existing data
+                tweetAdapter.clear();
+                //add the new data
+                tweetAdapter.addTweet(tweettoadd);
+
+                swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
