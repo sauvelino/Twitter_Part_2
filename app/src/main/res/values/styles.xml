@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!--
@@ -8,10 +8,7 @@
         -->
     </style>
 
-    <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
-        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
-    </style>
+
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
@@ -21,5 +18,32 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar" tools:ignore="DuplicateDefinition">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="Titlecolor">@color/colorPrimaryDark</item>
+        <item name="Overviewcolor">#808080</item>
+        <item name="Backgroundcolor">#fff</item>
+        <item name="toolbarcolor">#fff</item>
+        <item name="Bordercolor">@color/colorPrimaryDark</item>
+    </style>
 
+
+
+    <!-- Base application Nighttheme. -->
+    <style name="NightAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#000</item>
+        <item name="colorPrimaryDark">#000</item>
+        <item name="colorAccent">#fff</item>
+        <item name="Titlecolor">#fff</item>
+        <item name="Overviewcolor">#fff</item>
+        <item name="Backgroundcolor">#000</item>
+        <item name="toolbarcolor">#fff</item>
+        <item name="Bordercolor">#fff</item>
+
+    </style>
 </resources>

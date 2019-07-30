@@ -40,7 +40,8 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHOlder> 
         Tweet tweet=tweets.get(i);
         viewHOlder.TVbody.setText(tweet.body);
         viewHOlder.TVScreenName.setText(tweet.user.ScreenName);
-
+        String time = TimeFormatter.getTimeDifference(tweet.createdat);
+        viewHOlder.tv_time.setText(time);
         Glide.with(context)
                 .load(tweet.user.ImageUrl)
                 .into(viewHOlder.imgProfile);
