@@ -1,7 +1,9 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +38,21 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHOlder> 
     //bind value base on position
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHOlder viewHOlder, int i) {
+    public void onBindViewHolder(@NonNull ViewHOlder viewHOlder, final int i) {
+        viewHOlder.constraintLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent im=new Intent(context,detail.class);
+                im.putExtra("image",tweets.get(i).user.ImageUrl);
+                im.putExtra("body",tweets.get(i).body);
+                im.putExtra("screen",tweets.get(i).user.ScreenName);
+                im.putExtra("time",tweets.get(i).createdat);
+                im.putExtra("retweet",tweets.get(i).retweet);
+                im.putExtra("like",tweets.get(i).favorite);
+                im.putExtra("imagepost",tweets.get(i).image);
+                context.startActivity(im);
+            }
+        });
         Tweet tweet=tweets.get(i);
         viewHOlder.TVbody.setText(tweet.body);
         viewHOlder.TVScreenName.setText(tweet.user.ScreenName);
@@ -45,8 +61,19 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHOlder> 
         Glide.with(context)
                 .load(tweet.user.ImageUrl)
                 .into(viewHOlder.imgProfile);
+     viewHOlder.tv_retweet.setText(tweet.retweet);
+      viewHOlder.tv_like.setText(tweet.favorite);
+        if(tweet.type.contentEquals("photo")){
+            Glide.with(context)
+                    .load(tweet.image)
+                    .into(viewHOlder.img_post);
+        }else if(tweet.type.contentEquals(""))
+        {
+            viewHOlder.img_post.setVisibility(View.INVISIBLE);
+        }
 
     }
+
 
     @Override
     public int getItemCount() {
@@ -66,16 +93,22 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHOlder> 
 
     //Define the viewholder
     public class ViewHOlder extends RecyclerView.ViewHolder{
-        public ImageView imgProfile;
-        public TextView TVScreenName,TVbody,tv_time;
+        public ConstraintLayout constraintLayout;
+        public ImageView imgProfile,img_post;
+        public TextView TVScreenName,TVbody,tv_time,tv_comment,tv_like,tv_retweet;
 
 
         public ViewHOlder(@NonNull View itemView) {
             super(itemView);
+            constraintLayout=itemView.findViewById(R.id.container);
             imgProfile=itemView.findViewById(R.id.img_profil);
             TVScreenName=itemView.findViewById(R.id.tv_name);
             TVbody=itemView.findViewById(R.id.tv_tweet);
             tv_time=itemView.findViewById(R.id.tv_time);
+            tv_like=itemView.findViewById(R.id.tv_like);
+            tv_comment=itemView.findViewById(R.id.tv_comment);
+            tv_retweet=itemView.findViewById(R.id.tv_retweet);
+            img_post=itemView.findViewById(R.id.img_psot);
         }
     }
 }

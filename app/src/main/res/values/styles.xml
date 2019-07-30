@@ -27,7 +27,7 @@
         <item name="Titlecolor">@color/colorPrimaryDark</item>
         <item name="Overviewcolor">#808080</item>
         <item name="Backgroundcolor">#fff</item>
-        <item name="toolbarcolor">#fff</item>
+        <item name="toolbarcolor">#00acee</item>
         <item name="Bordercolor">@color/colorPrimaryDark</item>
     </style>
 

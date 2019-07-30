@@ -6,6 +6,9 @@ import org.json.JSONObject;
 public class Tweet {
     public String body,createdat;
     public long uid;
+    public String type;
+    public String image;
+    public String retweet,favorite;
     public User user;
 
 
@@ -16,6 +19,17 @@ public class Tweet {
             tweet.uid=jsonObject.getLong("id");
             tweet.createdat=jsonObject.getString("created_at");
             tweet.user=User.fromJson(jsonObject.getJSONObject("user"));
+            tweet.retweet=jsonObject.getString("retweet_count");
+            tweet.favorite=jsonObject.getString("favorite_count");
+            if(jsonObject.getJSONObject("entities").has("media")){
+                tweet.image = jsonObject.getJSONObject("entities").getJSONArray("media").getJSONObject(0).getString("media_url");
+                tweet.type = jsonObject.getJSONObject("entities").getJSONArray("media").getJSONObject(0).getString("type");
+            }else{
+                tweet.type = "";
+                tweet.image = "";
+            }
+
+
 
 
 
