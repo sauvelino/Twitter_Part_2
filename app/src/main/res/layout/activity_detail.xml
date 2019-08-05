@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container1"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp">
+    android:layout_margin="4dp"
+    tools:layout_editor_absoluteX="4dp"
+    tools:layout_editor_absoluteY="4dp">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:scaleType="centerCrop"
         android:id="@+id/img_profil"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginTop="4dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+        tools:srcCompat="?attr/colorAccent" />
 
     <TextView
         android:id="@+id/tv_name"
@@ -48,7 +50,7 @@
         android:background="?android:attr/listDivider"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="328dp" />
+        tools:layout_editor_absoluteY="124dp" />
 
     <TextView
         android:id="@+id/tv_time"
@@ -120,7 +122,7 @@
             android:text="50" />
 
         <ImageButton
-            android:id="@+id/imageButton4"
+            android:id="@+id/img_like"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"

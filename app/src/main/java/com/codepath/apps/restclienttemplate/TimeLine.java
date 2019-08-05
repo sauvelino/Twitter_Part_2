@@ -1,12 +1,16 @@
 package com.codepath.apps.restclienttemplate;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,46 +21,55 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.widget.Toast;
+import android.widget.ImageView;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
-import com.loopj.android.http.JsonHttpResponseHandler;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.parceler.Parcels;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import cz.msebera.android.httpclient.Header;
 
 public class TimeLine extends AppCompatActivity
+
         implements NavigationView.OnNavigationItemSelectedListener {
-    private TwitterClient client;
-    private RecyclerView recyclerView;
-    private  TweetAdapter tweetAdapter;
-    private List<Tweet> tweets;
-    private SwipeRefreshLayout swipeRefreshLayout;
+    FragmentPagerAdapter adapterViewPager;
+    private final int Request_code=20;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Home");
+//for custom actionbar
 
-
-        Toolbar toolbare = findViewById(R.id.toolbar2);
-        toolbare.inflateMenu(R.menu.menu2);
         setSupportActionBar(toolbar);
+        ActionBar actionBar=getSupportActionBar();
+        actionBar.setDisplayShowCustomEnabled(true);
+        LayoutInflater layoutInflater=(LayoutInflater)this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View action_bar_view=layoutInflater.inflate(R.layout.custom_bar_home,null);
+       // actionBar.setCustomView(action_bar_view);
+        //for custom actionbar
+
+    //    /*
+        ViewPager vpPager =findViewById(R.id.pager);
+        adapterViewPager  =new MyPagerAdapter(getSupportFragmentManager());
+        vpPager.setAdapter(adapterViewPager);
+        vpPager.getCurrentItem();
+        //for the viewPager
+// */
+       // setSupportActionBar(toolbar);
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "For new tweet", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+              //  Snackbar.make(view, "For new tweet", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                startActivityForResult(new Intent(TimeLine.this,NewTweet.class),Request_code);
             }
         });
+
+
+        ImageView btn_draw=findViewById(R.id.btn_draw);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -64,81 +77,9 @@ public class TimeLine extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
-
-
-
-        //for the client request
-        client= TwitterApplication.getRestClient(this);
-
-        //swipe
-        swipeRefreshLayout=findViewById(R.id.swipecontainer);
-        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
-
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                PopulateHomeTimeLIne();
-                Log.d("TwitterClient","Refresh");
-            }
-        });
-
-        //create method for populate
-        PopulateHomeTimeLIne();
-
-        //find the recylcler view
-        recyclerView=findViewById(R.id.rv_list);
-        //initialize list of tweet and adapter form the data source
-        tweets=new ArrayList<>();
-        tweetAdapter=new TweetAdapter(this,tweets);
-        //recyclerview:setup layout manager setting the adapter
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(tweetAdapter);
     }
 
-    private void PopulateHomeTimeLIne() {
-        client.getHomeTimeLine(new JsonHttpResponseHandler(){
 
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                Log.d("TwitterClient",response.toString());
-                List<Tweet> tweettoadd=new ArrayList<>();
-                for(int i=0; i<response.length();i++){
-                    try {
-                        //convert each jsonobject into tweet object
-                        JSONObject jsonObject= response.getJSONObject(i);
-
-                        Tweet tweet= Tweet.fromJson(jsonObject);
-                        //add the tweet into our data source
-                        tweettoadd.add(tweet);
-
-                        //notify datachange
-                      //  tweetAdapter.notifyItemInserted(tweets.size()-1);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-                //clear the existing data
-                tweetAdapter.clear();
-                //add the new data
-                tweetAdapter.addTweet(tweettoadd);
-
-                swipeRefreshLayout.setRefreshing(false);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                super.onFailure(statusCode, headers, responseString, throwable);
-            }
-        });
-    }
 
     @Override
     public void onBackPressed() {

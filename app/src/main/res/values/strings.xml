@@ -19,5 +19,6 @@
     <string name="menu_tools">Moments</string>
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
+    <string name="compose_hint">What\'s on your mind?</string>
 
 </resources>

@@ -2,6 +2,7 @@ package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 
 import java.util.ArrayList;
@@ -58,15 +61,19 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHOlder> 
         viewHOlder.TVScreenName.setText(tweet.user.ScreenName);
         String time = TimeFormatter.getTimeDifference(tweet.createdat);
         viewHOlder.tv_time.setText(time);
-        Glide.with(context)
+       Glide.with(context)
                 .load(tweet.user.ImageUrl)
                 .into(viewHOlder.imgProfile);
      viewHOlder.tv_retweet.setText(tweet.retweet);
       viewHOlder.tv_like.setText(tweet.favorite);
+
         if(tweet.type.contentEquals("photo")){
             Glide.with(context)
                     .load(tweet.image)
                     .into(viewHOlder.img_post);
+
+
+
         }else if(tweet.type.contentEquals(""))
         {
             viewHOlder.img_post.setVisibility(View.INVISIBLE);
@@ -94,12 +101,13 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHOlder> 
     //Define the viewholder
     public class ViewHOlder extends RecyclerView.ViewHolder{
         public ConstraintLayout constraintLayout;
-        public ImageView imgProfile,img_post;
+        public ImageView imgProfile,img_post,img_like;
         public TextView TVScreenName,TVbody,tv_time,tv_comment,tv_like,tv_retweet;
 
 
         public ViewHOlder(@NonNull View itemView) {
             super(itemView);
+            img_like=itemView.findViewById(R.id.img_like);
             constraintLayout=itemView.findViewById(R.id.container);
             imgProfile=itemView.findViewById(R.id.img_profil);
             TVScreenName=itemView.findViewById(R.id.tv_name);
@@ -109,6 +117,26 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHOlder> 
             tv_comment=itemView.findViewById(R.id.tv_comment);
             tv_retweet=itemView.findViewById(R.id.tv_retweet);
             img_post=itemView.findViewById(R.id.img_psot);
+        }
+    }
+
+    public void saveToDatabase(){
+        new DatabaseAsync().execute();
+    }
+
+    public class DatabaseAsync extends AsyncTask<Void,Void,Void>{
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            TweetData tweetData=new TweetData(context);
+            tweetData.CleanRecycler();
+            for(int i=0;i<tweets.size();i++){
+                long id=tweets.get(i).uid;
+                String text=tweets.get(i).body;
+                String createdat=tweets.get(i).createdat;
+                tweetData.BackupTweetData(id,text,createdat);
+            }
+            return null;
         }
     }
 }

@@ -46,4 +46,8 @@
         <item name="Bordercolor">#fff</item>
 
     </style>
+
+    <style name="counterOverride">counter</style>
+
+    <style name="counterText">textcounter</style>
 </resources>
