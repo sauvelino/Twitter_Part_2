@@ -10,7 +10,7 @@ import com.bumptech.glide.Glide;
 
 public class detail extends AppCompatActivity {
     public ImageView imgProfile,img_post;
-    public TextView TVScreenName,TVbody,tv_time,tv_comment,tv_like,tv_retweet;
+    public TextView TVScreenName,nameee,TVbody,tv_time,tv_comment,tv_like,tv_retweet;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +23,7 @@ public class detail extends AppCompatActivity {
         tv_comment=findViewById(R.id.tv_comment);
         tv_retweet=findViewById(R.id.tv_retweet);
         img_post=findViewById(R.id.img_psot);
+        nameee=findViewById(R.id.nameee);
 
         Intent i=getIntent();
         Glide.with(this)
@@ -38,6 +39,7 @@ public class detail extends AppCompatActivity {
         tv_time.setText(time);
         tv_like.setText(i.getStringExtra("like"));
         tv_retweet.setText(i.getStringExtra("retweet"));
+        nameee.setText(i.getStringExtra("name"));
 
     }
 }

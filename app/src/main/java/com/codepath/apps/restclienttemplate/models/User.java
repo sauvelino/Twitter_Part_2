@@ -10,6 +10,38 @@ public class User {
     public long uid;
     public String ImageUrl;
 
+    public String getName() {
+        return Name;
+    }
+
+    public void setName(String name) {
+        Name = name;
+    }
+
+    public String getScreenName() {
+        return ScreenName;
+    }
+
+    public void setScreenName(String screenName) {
+        ScreenName = screenName;
+    }
+
+    public long getUid() {
+        return uid;
+    }
+
+    public void setUid(long uid) {
+        this.uid = uid;
+    }
+
+    public String getImageUrl() {
+        return ImageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        ImageUrl = imageUrl;
+    }
+
     public User() {
     }
 

@@ -9,23 +9,24 @@
     android:padding="5dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:scaleType="centerCrop"
         android:id="@+id/img_profil"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="9dp"
+        android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@color/colorPrimary" />
 
     <TextView
-        android:id="@+id/tv_name"
+        android:id="@+id/userrrr"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
         android:text="Misaun_official"
-        android:textStyle="bold"
+        android:textStyle="normal|bold"
         app:layout_constraintStart_toEndOf="@+id/img_profil"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -40,37 +41,36 @@
         android:text="this is my best tweet!!!!!!!!!!!!!!!!!!!"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/img_profil"
-        app:layout_constraintTop_toBottomOf="@+id/tv_name" />
-
-    <View
-        android:id="@+id/divider2"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?android:attr/listDivider"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="5dp"
-        tools:layout_editor_absoluteY="113dp" />
+        app:layout_constraintTop_toBottomOf="@+id/nameee" />
 
     <TextView
         android:id="@+id/tv_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
         android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
         android:text="TextView"
-        app:layout_constraintStart_toEndOf="@+id/tv_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/nameee"
+
+        android:layout_width="wrap_content"
+        android:layout_height="18dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        app:layout_constraintStart_toEndOf="@+id/userrrr"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/img_psot"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="58dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="237dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/img_profil"
         app:layout_constraintTop_toBottomOf="@+id/tv_tweet"
         app:srcCompat="@drawable/ic_vector_photo_stroke"
         tools:ignore="VectorDrawableCompat" />
@@ -79,13 +79,11 @@
         android:id="@+id/linearLayout"
         android:layout_width="275dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="56dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="72dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/img_profil"
         app:layout_constraintTop_toBottomOf="@+id/img_psot">
 
         <ImageButton
@@ -144,5 +142,14 @@
             app:srcCompat="@drawable/ic_menu_share" />
 
     </LinearLayout>
+
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="10dp"
+        tools:layout_editor_absoluteY="113dp" />
 
 </android.support.constraint.ConstraintLayout>

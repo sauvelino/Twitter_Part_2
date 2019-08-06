@@ -3,13 +3,11 @@ package com.codepath.apps.restclienttemplate;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.support.v4.view.GravityCompat;
@@ -22,10 +20,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.codepath.apps.restclienttemplate.models.Tweet;
+import com.bumptech.glide.Glide;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
-import org.parceler.Parcels;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
 
 
 public class TimeLine extends AppCompatActivity
@@ -33,6 +37,10 @@ public class TimeLine extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     FragmentPagerAdapter adapterViewPager;
     private final int Request_code=20;
+    private TwitterClient client;
+    String username;
+    ImageView account_profil;
+    TextView account_following,account_followers,account_user,account_screen;
 
 
     @Override
@@ -40,6 +48,7 @@ public class TimeLine extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
+
         toolbar.setTitle("Home");
 //for custom actionbar
 
@@ -77,8 +86,68 @@ public class TimeLine extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+        client= TwitterApplication.getRestClient(this);
+        GetAccountsetting();
     }
 
+    private void GetAccountsetting() {
+        client.acountSetting(new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    username=response.getString("screen_name");
+                    client.accountinfo(username,new JsonHttpResponseHandler(){
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            Log.d("TwitterClientProfile",username );
+                            String profile_img= null;
+                            try {
+                                account_followers=findViewById(R.id.account_followers);
+                                account_following=findViewById(R.id.account_following);
+                                account_user=findViewById(R.id.account_user);
+                                account_profil=findViewById(R.id.profile);
+                                account_screen=findViewById(R.id.account_screen);
+                                account_user.setText(response.getString("name"));
+                                account_screen.setText("@" +response.getString("screen_name"));
+                                account_followers.setText(response.getString("followers_count"));
+                                account_following.setText(response.getString("friends_count"));
+                                profile_img = response.getString("profile_image_url");
+                                Glide.with(TimeLine.this).load(profile_img).into(account_profil);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                            super.onFailure(statusCode, headers, throwable, errorResponse);
+
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                            super.onFailure(statusCode, headers, responseString, throwable);
+                            Log.d("TwitterClientProfile",responseString);
+                        }
+                    });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+            }
+        });
+    }
 
 
     @Override

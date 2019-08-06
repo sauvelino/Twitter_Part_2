@@ -13,8 +13,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -30,6 +33,9 @@ public class NewTweet extends AppCompatActivity {
     EditText tv_compose;
     private TwitterClient client;
     ImageButton btn_cancel;
+    String username;
+    ImageView account_profil;
+    TextView account_user,account_screen;
 
 
     @Override
@@ -49,7 +55,7 @@ public class NewTweet extends AppCompatActivity {
         btn_new_tweet=findViewById(R.id.btn_new_tweet);
         tv_compose=findViewById(R.id.tv_compose);
         client= TwitterApplication.getRestClient(this);
-
+        GetAccountsetting();
         btn_new_tweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,6 +103,62 @@ public class NewTweet extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+    }
+
+    private void GetAccountsetting() {
+        client.acountSetting(new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    username=response.getString("screen_name");
+                    client.accountinfo(username,new JsonHttpResponseHandler(){
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                            Log.d("TwitterClientProfile",username );
+                            String profile_img= null;
+                            try {
+
+                                account_user=findViewById(R.id.account_user);
+                                account_profil=findViewById(R.id.new_twet);
+                                account_screen=findViewById(R.id.account_screen);
+                                account_user.setText(response.getString("name"));
+                                account_screen.setText("@" +response.getString("screen_name"));
+                                profile_img = response.getString("profile_image_url");
+                                Glide.with(NewTweet.this).load(profile_img).into(account_profil);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                            super.onFailure(statusCode, headers, throwable, errorResponse);
+
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                            super.onFailure(statusCode, headers, responseString, throwable);
+                            Log.d("TwitterClientProfile",responseString);
+                        }
+                    });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
             }
         });
     }

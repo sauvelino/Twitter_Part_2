@@ -9,7 +9,6 @@
     </style>
 
 
-
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -30,7 +29,6 @@
         <item name="toolbarcolor">#00acee</item>
         <item name="Bordercolor">@color/colorPrimaryDark</item>
     </style>
-
 
 
     <!-- Base application Nighttheme. -->

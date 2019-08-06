@@ -40,6 +40,7 @@ public class HomeFragment extends Fragment {
     private int Request_code=20;
     ProgressBar progressBar;
 
+
     // newInstance constructor for creating fragment with arguments
     public static HomeFragment newInstance(int page, String title) {
         HomeFragment fragmentFirst = new HomeFragment();
@@ -58,28 +59,10 @@ public class HomeFragment extends Fragment {
    //     title = getArguments().getString("someTitle");
 
         client= TwitterApplication.getRestClient(getActivity());
-
+        //GetOfflineData();
         PopulateHomeTimeLIne();
     }
 
-    private void GetOfflineData() {
-        TweetData database = new TweetData(getActivity());
-        Cursor cursor=database.GetData();
-        if(cursor.getCount()!=0){
-            List<Tweet> tweets=new ArrayList<>();
-            while (cursor.moveToNext()){
-
-                Tweet tweet=new Tweet();
-                tweet.setBody(cursor.getString(cursor.getColumnIndex("text")));
-                Log.e("Erreur",cursor.getString(cursor.getColumnIndex("createAt")));
-                tweet.setUid(cursor.getLong(cursor.getColumnIndex("id")));
-                tweet.setCreatedat(cursor.getString(cursor.getColumnIndex("createAt")));
-                tweets.add(tweet);
-            }
-            tweetAdapter.clear();
-            tweetAdapter.addTweet(tweets);
-        }
-    }
 
     private void PopulateHomeTimeLIne() {
      client.getHomeTimeLine(new JsonHttpResponseHandler(){
@@ -99,7 +82,7 @@ public class HomeFragment extends Fragment {
                      tweettoadd.add(tweet);
 
                      //notify datachange
-                     //  tweetAdapter.notifyItemInserted(tweets.size()-1);
+                       tweetAdapter.notifyItemInserted(tweets.size()-1);
                  } catch (JSONException e) {
                      e.printStackTrace();
                  }
@@ -141,13 +124,14 @@ public class HomeFragment extends Fragment {
         progressBar.setVisibility(View.INVISIBLE);
         RecyclerView RecyclerView =view.findViewById(R.id.rv_list);
         tweets=new ArrayList<>();
-        tweetAdapter=new TweetAdapter(getActivity(),tweets);
+        tweetAdapter = new TweetAdapter(getActivity(),tweets);
         RecyclerView.setAdapter(tweetAdapter);
         RecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         RecyclerView.smoothScrollToPosition(0);
         tweetAdapter.notifyItemInserted(0);
+        tweetAdapter.getDataFromDatabase();
        //swipe
-        swipeRefreshLayout= view.findViewById(R.id.swipecontainer);
+        swipeRefreshLayout = view.findViewById(R.id.swipecontainer);
         swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
@@ -164,5 +148,32 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
+   /* private void GetOfflineData() {
+        TweetData database = new TweetData(getActivity());
+       //Cursor cursor = database.GetData();
+        Cursor cursor = database.GetData();
+         if(cursor.getCount() != 0){
+        List<Tweet> tweettoadd = new ArrayList<>();
+        //tweetAdapter=new TweetAdapter(getActivity(),tweettoadd);
+        while (cursor.moveToNext()){
+
+            Tweet tweettt=new Tweet();
+            tweettt.setBody(cursor.getString(cursor.getColumnIndex("text")));
+           // tweettt.setFavorite(cursor.getString(cursor.getColumnIndex("favorite_count")));
+            //tweettt.setImage(cursor.getString(cursor.getColumnIndex("img_post")));
+           // tweettt.setRetweet(cursor.getString(cursor.getColumnIndex("retweet_count")));
+//                tweettt.user.setName(cursor.getString(cursor.getColumnIndex("name")));
+//                tweettt.user.setScreenName(cursor.getString(cursor.getColumnIndex("screen_name")));
+            //tweettt.setUid(cursor.getLong(cursor.getColumnIndex("id")));
+//                tweettt.user.setImageUrl(cursor.getString(cursor.getColumnIndex("img_url")));
+           //tweettt.setCreatedat(cursor.getString(cursor.getColumnIndex("createdAt")));
+            tweettoadd.add(tweettt);
+            Log.e("Erreur", String.valueOf(tweettt));
+        }
+        //tweetAdapter=new TweetAdapter(getActivity(),tweettoadd);
+      //  tweetAdapter.clear();
+      //  tweetAdapter.addTweet(tweettoadd);
+         }
+    }*/
 
 }
